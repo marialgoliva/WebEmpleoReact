@@ -20,7 +20,10 @@ export function JobHeader() {
 
                 <div>
                     <button>Subir CV</button>
-                    <Avatar service="x" username="midudev" size="32"></Avatar>
+                    <Avatar 
+                    service="github"
+                    username="marialgoliva"
+                    size="32"></Avatar>
                 </div>
             </header>
         );

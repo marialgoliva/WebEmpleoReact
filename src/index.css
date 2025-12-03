@@ -270,7 +270,8 @@ form {
   padding-inline: 1rem;
 }
 
-form > div {
+form > div:first-child {
+  transition: transform 0.5s ease;
   display: flex;
   align-items: center;
   background-color: var(--input-bg);
@@ -278,9 +279,6 @@ form > div {
   box-shadow: 0 10px 15px -3px var(--shadow);
   padding: 0.7rem;
   gap: 0.5rem;
-}
-
-form > div:first-child {
   input {
     font-size: 0.8rem;
     padding: 0;
@@ -288,6 +286,10 @@ form > div:first-child {
   svg {
     width: 1rem;
   }
+}
+
+.focused:first-child {
+  transform: scale(1.2);
 }
 
 form span {
@@ -308,6 +310,8 @@ form input[type="text"] {
   font-size: 1rem;
   font-family: inherit;
 }
+
+
 
 form input[type="text"]::placeholder {
   color: #64748b;
@@ -332,6 +336,8 @@ button:hover{
   outline: 2px solid white;
   outline-offset: 2px;
 }
+
+
 
 .is-applied {
   background-color: rgb(24, 128, 59);
@@ -390,6 +396,13 @@ main > section:nth-child(2) {
   border: none;
 }
 
+}
+
+.noResult
+{
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
 }
 
 .invisible {

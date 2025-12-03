@@ -1,6 +1,6 @@
 
 
-export default function Avatar({service, username, size}) {
+export default function Avatar({service="github", username="", size}) {
 
     const url = `https://unavatar.io/${service}/${username}`
     return (

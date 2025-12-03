@@ -5,18 +5,41 @@ import { JobHeader } from "./components/JobHeader";
 import { Search } from "./components/Search";
 import { Pagination } from "./components/Pagination";
 import { Footer } from "./components/Footer";
-import { SelectJobs } from "./components/SelectJobs";
 
 
 
 function App() {
-
+    const [filters, setFilters] = useState({
+            tecnologia: '',
+            ubicacion: '',
+            experiencia: ''
+        });
+    const [textToFilter, setTextToFilter] = useState("");
     const PAGESIZE = 5;
     const [currentPage, setCurrentPage] = useState(1);
     const start = (currentPage-1) * PAGESIZE;
-    const jobsVisibles = jobsData.slice(start,start+PAGESIZE)
-    const jobsFiltrados = jobsVisibles; //TODO
-    const totalPaginas = Math.ceil(jobsData.length/PAGESIZE);
+    
+    const jobsSelectFiltered = jobsData.filter(job => {
+        
+        return (
+            (filters.tecnologia === '' || job.data.technology.toLowerCase() === filters.tecnologia.toLowerCase()) 
+            &&
+            (filters.ubicacion === '' || job.data.modalidad.toLowerCase() === filters.ubicacion.toLowerCase()) 
+            &&
+            (filters.experiencia === '' || job.data.nivel.toLowerCase() === filters.experiencia.toLowerCase())
+        );
+    });
+
+    const jobsTextFiltered = textToFilter === ''
+        ? jobsSelectFiltered
+        : jobsSelectFiltered.filter(job => {
+            return job.titulo.toLowerCase().includes(textToFilter.toLowerCase())
+        })
+    
+    const totalPaginas = Math.ceil(jobsTextFiltered.length/PAGESIZE);    
+    const jobsVisibles = jobsTextFiltered.slice(start,start+PAGESIZE)
+    
+    
     
     const handleChangePage = (page) => {
         setCurrentPage(page)
@@ -53,6 +76,21 @@ function App() {
         name: nivel.charAt(0).toUpperCase() + nivel.slice(1)
     }))
 
+
+    const handleChange = (name, value) => {
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+            })
+        );
+        setCurrentPage(1);
+
+    }
+
+    const handleTextChange = (newTextToFilter) => {
+        setTextToFilter(newTextToFilter);
+        setCurrentPage(1);
+    }
     
     
     return (
@@ -63,7 +101,13 @@ function App() {
                 <section className="empleosHeader">
                     <h1>Encuentra tu próximo trabajo</h1>
                     <p>Explora miles de oportunidades en el sector tecnológico.</p>
-                    <Search techSelect={tecnologias} ubiSelect={ubicaciones} expSelect={experiencias}></Search>
+                    <Search 
+                        techOptions={tecnologias} 
+                        ubiOptions={ubicaciones} 
+                        expOptions={experiencias}
+                        filters ={filters}
+                        onTextChange={handleTextChange} onChange={handleChange}>
+                    </Search>
                 </section>
                 <section className="resultadosBusqueda">
                     <h2>Resultados de busqueda</h2>
@@ -71,7 +115,7 @@ function App() {
                     <div className="jobs-articles">
                         {jobsVisibles.length>0 ? jobsVisibles.map(job => {
                             return <JobCardComponent key={job.id} job={job}></JobCardComponent>
-                        }) : <p>No se han encontrado resultados para esos filtros.</p>}
+                        }) : <p className='noResult'>No se han encontrado resultados para esos filtros.</p>}
                         
                     </div>
                 </section>
